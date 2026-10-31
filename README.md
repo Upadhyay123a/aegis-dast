@@ -41,7 +41,7 @@ verification, then reports to console, HTML, JSON and **SARIF**.
 
 ### Install & quick start
 
-Requires **Node.js ≥ 18.17**.
+Requires **Node.js ≥ 20**.
 
 ```bash
 git clone https://github.com/Upadhyay123a/aegis-dast.git
