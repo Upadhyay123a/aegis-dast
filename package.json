@@ -1,0 +1,84 @@
+{
+  "name": "aegis-dast",
+  "version": "0.1.0",
+  "description": "Aegis-DAST — an AI-augmented, safe-by-default Dynamic Application Security Testing (DAST) scanner.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Upadhyay123a",
+  "homepage": "https://github.com/Upadhyay123a/aegis-dast#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Upadhyay123a/aegis-dast.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Upadhyay123a/aegis-dast/issues"
+  },
+  "keywords": [
+    "dast",
+    "security",
+    "web-security",
+    "vulnerability-scanner",
+    "appsec",
+    "ai",
+    "llm",
+    "owasp",
+    "sarif",
+    "pentest"
+  ],
+  "bin": {
+    "aegis": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/cli.ts",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"**/*.{ts,json,md}\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "demo:server": "tsx test/fixtures/vuln-server.ts",
+    "demo:scan": "tsx src/cli.ts scan http://127.0.0.1:3000 --active --i-have-authorization --scope 127.0.0.1 --report console,html,json,sarif --out ./aegis-report",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "p-limit": "^6.1.0",
+    "undici": "^6.19.8",
+    "zod": "^3.23.8"
+  },
+  "optionalDependencies": {
+    "@anthropic-ai/sdk": "^0.27.3",
+    "openai": "^4.67.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.5"
+  }
+}
