@@ -2,6 +2,13 @@
 
 **An AI-augmented, safe-by-default security scanner — for web apps _and_ AI models.**
 
+[![CI](https://github.com/Upadhyay123a/aegis-dast/actions/workflows/ci.yml/badge.svg)](https://github.com/Upadhyay123a/aegis-dast/actions/workflows/ci.yml)
+[![Python CI](https://github.com/Upadhyay123a/aegis-dast/actions/workflows/python-ci.yml/badge.svg)](https://github.com/Upadhyay123a/aegis-dast/actions/workflows/python-ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+![Node](https://img.shields.io/badge/node-%E2%89%A520-339933?logo=node.js&logoColor=white)
+![Python](https://img.shields.io/badge/python-%E2%89%A53.9-3776AB?logo=python&logoColor=white)
+
 Aegis-DAST is a two-part toolkit:
 
 | Tool | Language | Scans | Where |
@@ -17,6 +24,17 @@ layer behind it.
 > ⚠️ **Only scan systems and models you own or are authorized to test.**
 > Both tools gate their active/attack behaviour behind an explicit
 > authorization flag.
+
+## Who it's for
+
+- **Startups & small teams** — one `npx`/`pip` command to scan your site and your
+  AI features before you ship; no servers, no license, no account.
+- **Larger orgs** — drop either scanner into CI with `--fail-on high`, upload
+  **SARIF** to the GitHub Security tab, and track an AI **risk score / grade** per
+  release. Pluggable AI provider works with your own Claude/OpenAI keys or a local
+  model, so nothing leaves your network if you don't want it to.
+- **Security engineers & researchers** — a clean plugin/probe architecture: add a
+  web check or an LLM probe in a single file.
 
 ---
 
@@ -173,11 +191,20 @@ print(result.counts())
 
 | Probe id | Tests for | OWASP |
 |----------|-----------|-------|
-| `prompt-injection` | Instruction override via user input | LLM01 |
+| `prompt-injection` | Direct instruction override via user input | LLM01 |
+| `indirect-injection` | Instruction smuggled through retrieved/RAG content | LLM01 |
+| `encoding-injection` | Base64/ROT13-obfuscated injection past filters | LLM01 |
 | `jailbreak` | Guardrail bypass via jailbreak wrappers | LLM01 |
+| `multi-turn-escalation` | "Crescendo" attacks across a conversation | LLM01 |
 | `system-prompt-leak` | Disclosure of hidden system instructions | LLM07 |
 | `sensitive-info-disclosure` | Extraction of secrets planted in context | LLM02 |
+| `excessive-agency` | Taking/confirming destructive actions | LLM06 |
 | `insecure-output-handling` | Emitting raw script/SQL payloads verbatim | LLM05 |
+| `unbounded-consumption` | No output cap → denial of wallet | LLM10 |
+
+Every AI scan also returns a **risk score (0-100) and grade (A-F)**. Targets
+support multi-turn conversations, retries, and rate limiting for scanning real
+live models.
 
 ---
 
@@ -197,12 +224,13 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) to add a web check or an AI probe.
 ## Roadmap
 
 - [x] Core web DAST (XSS, SQLi, SSRF, CSRF, CORS, CRLF, cmd-injection, traversal, open-redirect)
-- [x] AI/LLM scanner (prompt injection, jailbreak, leakage, insecure output)
+- [x] AI/LLM scanner — 10 probes across the OWASP LLM Top 10
+- [x] Multi-turn (crescendo), indirect/RAG, and encoded injection probes
+- [x] Risk score/grade, finding aggregation, SARIF for GitHub code scanning
 - [ ] Playwright crawling for JS-heavy SPAs
 - [ ] Authenticated session recording / replay
 - [ ] Baseline diffing (report only *new* findings)
-- [ ] More AI probes: tool/function-call abuse, multi-turn attacks, RAG poisoning
-- [ ] Web dashboard
+- [ ] Web dashboard and scheduled scans
 
 ## Legal & safety
 
