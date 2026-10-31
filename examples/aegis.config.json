@@ -1,0 +1,23 @@
+{
+  "$comment": "Sample Aegis-DAST config. Run: aegis scan https://your-app.example --config examples/aegis.config.json",
+  "target": "https://your-app.example",
+  "scope": ["your-app.example", "api.your-app.example"],
+  "authorized": false,
+  "active": false,
+  "maxDepth": 3,
+  "maxUrls": 200,
+  "concurrency": 8,
+  "requestDelayMs": 0,
+  "timeoutMs": 15000,
+  "respectRobots": true,
+  "headers": {
+    "Cookie": "session=REPLACE_ME",
+    "Authorization": "Bearer REPLACE_ME"
+  },
+  "excludeRules": [],
+  "ai": "auto",
+  "aiMinSeverity": "low",
+  "reports": ["console", "html", "json", "sarif"],
+  "outDir": "./aegis-report",
+  "failOn": "high"
+}
