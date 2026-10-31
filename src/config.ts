@@ -66,6 +66,14 @@ export const ConfigSchema = z.object({
 
   /** Fail the process (non-zero exit) if a finding at/above this severity exists. */
   failOn: z.enum(['never', 'low', 'medium', 'high', 'critical']).default('never'),
+
+  /**
+   * Collapse identical site-wide findings (same rule, title and evidence across
+   * many URLs) into one entry that notes how many locations are affected. Keeps
+   * reports readable on large sites. Per-URL findings (e.g. distinct XSS points)
+   * are never merged because their evidence differs.
+   */
+  aggregate: z.boolean().default(true),
 });
 
 export type Config = z.infer<typeof ConfigSchema>;

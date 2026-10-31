@@ -68,7 +68,7 @@ export class Engine {
       `Running ${checks.length} check(s): ${checks.map((c) => c.id).join(', ') || '(none)'}`,
     );
     const rawFindings = await this.runChecks(surface, checks, ai);
-    const deduped = dedupe(rawFindings);
+    const deduped = this.config.aggregate ? aggregate(dedupe(rawFindings)) : dedupe(rawFindings);
     logger.success(`Collected ${deduped.length} candidate finding(s)`);
 
     // --- AI verification (false-positive reduction) ---
@@ -135,6 +135,35 @@ function dedupe(findings: Finding[]): Finding[] {
     if (!seen.has(f.id)) seen.set(f.id, f);
   }
   return [...seen.values()];
+}
+
+/**
+ * Merge findings that share the same rule, title and evidence snippet (i.e. the
+ * same site-wide issue seen on many URLs) into a single representative finding
+ * that records how many locations are affected. Findings whose evidence differs
+ * (e.g. distinct reflected-XSS points) are left untouched.
+ */
+function aggregate(findings: Finding[]): Finding[] {
+  const groups = new Map<string, Finding[]>();
+  for (const f of findings) {
+    const key = `${f.ruleId}|${f.title}|${f.evidence.snippet ?? ''}`;
+    const list = groups.get(key);
+    if (list) list.push(f);
+    else groups.set(key, [f]);
+  }
+
+  const out: Finding[] = [];
+  for (const group of groups.values()) {
+    const rep = group[0]!;
+    if (group.length > 1) {
+      const examples = group.slice(0, 3).map((f) => f.evidence.url);
+      const more = group.length - examples.length;
+      rep.description +=
+        ` Affects ${group.length} locations: ${examples.join(', ')}${more > 0 ? `, +${more} more` : ''}.`;
+    }
+    out.push(rep);
+  }
+  return out;
 }
 
 function sortFindings(findings: Finding[]): Finding[] {

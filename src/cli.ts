@@ -41,6 +41,7 @@ program
   .option('--include <rules>', 'only run these rule ids (comma-separated)', collectList, [])
   .option('--exclude <rules>', 'skip these rule ids (comma-separated)', collectList, [])
   .option('--no-robots', 'do not fetch/respect robots.txt')
+  .option('--no-aggregate', 'do not merge identical site-wide findings into one entry')
   .addOption(
     new Option('--fail-on <sev>', 'exit non-zero if a finding at/above this severity exists')
       .choices(['never', 'low', 'medium', 'high', 'critical'])
@@ -76,6 +77,7 @@ program
         includeRules: opts.include,
         excludeRules: opts.exclude,
         respectRobots: opts.robots,
+        aggregate: opts.aggregate,
         failOn: opts.failOn,
       };
 

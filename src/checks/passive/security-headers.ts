@@ -105,7 +105,7 @@ export const securityHeadersCheck: Check = {
             url: endpoint.url,
             method: baseline.method,
             responseStatus: baseline.status,
-            snippet: `Response headers present: ${Object.keys(headers).join(', ') || '(none)'}`,
+            snippet: `"${rule.header}" response header not present`,
           },
         }),
       );

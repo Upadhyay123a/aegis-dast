@@ -61,6 +61,16 @@ describe('end-to-end scan against the vulnerable test server', () => {
     expect(xss?.severity).toBe('high');
   });
 
+  it('aggregates identical site-wide findings into one entry', async () => {
+    const result = await scan({ target: baseUrl, scope: ['127.0.0.1'], ai: 'none', active: false });
+    const cspFindings = result.findings.filter(
+      (f) => f.ruleId === 'security-headers' && f.title.includes('Content-Security-Policy'),
+    );
+    // The demo app is missing CSP on every page, but they collapse to one entry.
+    expect(cspFindings).toHaveLength(1);
+    expect(cspFindings[0]!.description).toMatch(/Affects \d+ locations/);
+  });
+
   it('refuses active checks when not authorized (safety gate)', async () => {
     const result = await scan({
       target: baseUrl,
