@@ -23,3 +23,14 @@ Thumbs.db
 # test/coverage
 coverage/
 .vitest/
+
+# python
+python/.venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+aegis-ai-report*
