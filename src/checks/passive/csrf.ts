@@ -48,7 +48,9 @@ export const csrfCheck: Check = {
             url: endpoint.url,
             method: 'POST',
             responseStatus: baseline.status,
-            snippet: `form action=${form.action} fields=[${form.params.map((p) => p.name).join(', ')}]`,
+            // Stable snippet (field names, not the per-page action URL) so the
+            // same recurring form across many pages aggregates into one finding.
+            snippet: `POST form fields=[${form.params.map((p) => p.name).join(', ')}]`,
           },
         }),
       );

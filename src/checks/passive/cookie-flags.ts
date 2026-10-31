@@ -49,7 +49,9 @@ export const cookieFlagsCheck: Check = {
             method: baseline.method,
             param: name,
             responseStatus: baseline.status,
-            snippet: cookie.trim().slice(0, 200),
+            // Stable snippet (no rotating cookie value) so the same cookie issue
+            // across many pages aggregates into one finding.
+            snippet: `Set-Cookie "${name}" missing ${missing.join(', ')}`,
           },
         }),
       );
