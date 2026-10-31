@@ -47,6 +47,11 @@ describe('end-to-end scan against the vulnerable test server', () => {
     expect(rules.has('xss-reflected')).toBe(true);
     expect(rules.has('sqli')).toBe(true);
     expect(rules.has('open-redirect')).toBe(true);
+    expect(rules.has('cors-misconfig')).toBe(true);
+    expect(rules.has('command-injection')).toBe(true);
+    expect(rules.has('ssrf')).toBe(true);
+    expect(rules.has('prompt-injection')).toBe(true);
+    expect(rules.has('csrf')).toBe(true);
 
     const sqli = result.findings.find((f) => f.ruleId === 'sqli');
     expect(sqli?.severity).toBe('critical');

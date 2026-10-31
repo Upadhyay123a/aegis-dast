@@ -8,22 +8,34 @@ import type { Config } from '../config.js';
 import { securityHeadersCheck } from './passive/security-headers.js';
 import { cookieFlagsCheck } from './passive/cookie-flags.js';
 import { infoLeakCheck } from './passive/info-leak.js';
+import { csrfCheck } from './passive/csrf.js';
 
 import { xssReflectedCheck } from './active/xss-reflected.js';
 import { sqliCheck } from './active/sqli.js';
 import { openRedirectCheck } from './active/open-redirect.js';
 import { pathTraversalCheck } from './active/path-traversal.js';
+import { corsCheck } from './active/cors.js';
+import { crlfInjectionCheck } from './active/crlf-injection.js';
+import { commandInjectionCheck } from './active/command-injection.js';
+import { ssrfCheck } from './active/ssrf.js';
+import { promptInjectionCheck } from './active/prompt-injection.js';
 
 export const ALL_CHECKS: Check[] = [
   // passive
   securityHeadersCheck,
   cookieFlagsCheck,
   infoLeakCheck,
+  csrfCheck,
   // active
   xssReflectedCheck,
   sqliCheck,
   openRedirectCheck,
   pathTraversalCheck,
+  corsCheck,
+  crlfInjectionCheck,
+  commandInjectionCheck,
+  ssrfCheck,
+  promptInjectionCheck,
 ];
 
 /**
