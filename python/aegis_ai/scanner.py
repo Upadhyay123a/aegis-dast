@@ -31,9 +31,24 @@ class ScanResult:
             c[f.severity] = c.get(f.severity, 0) + 1
         return c
 
+    def risk_score(self) -> int:
+        """A 0-100 risk score: a single critical maxes it out; otherwise a
+        saturating weighted sum of findings. Useful for dashboards and gates."""
+        weights = {"info": 0, "low": 3, "medium": 8, "high": 20, "critical": 45}
+        total = sum(weights.get(f.severity, 0) for f in self.findings)
+        if any(f.severity == "critical" for f in self.findings):
+            total = max(total, 90)
+        return min(100, total)
+
+    def grade(self) -> str:
+        s = self.risk_score()
+        return "A" if s == 0 else "B" if s < 10 else "C" if s < 25 else "D" if s < 50 else "F"
+
     def to_dict(self) -> dict:
         return {
             "target": self.target,
+            "risk_score": self.risk_score(),
+            "grade": self.grade(),
             "probes_run": self.probes_run,
             "skipped_probes": self.skipped_probes,
             "counts": self.counts(),

@@ -72,11 +72,29 @@ open("report.html", "w").write(render_html(result))
 
 | Probe id | Tests for | OWASP |
 |----------|-----------|-------|
-| `prompt-injection` | Instruction override via user input | LLM01 |
+| `prompt-injection` | Direct instruction override via user input | LLM01 |
+| `indirect-injection` | Instruction smuggled through retrieved/RAG content | LLM01 |
+| `encoding-injection` | Base64/ROT13-obfuscated injection past plaintext filters | LLM01 |
 | `jailbreak` | Guardrail bypass via jailbreak wrappers | LLM01 |
+| `multi-turn-escalation` | "Crescendo" attacks that build up over a conversation | LLM01 |
 | `system-prompt-leak` | Disclosure of hidden system instructions | LLM07 |
 | `sensitive-info-disclosure` | Extraction of secrets planted in context | LLM02 |
+| `excessive-agency` | Taking/confirming destructive actions instead of refusing | LLM06 |
 | `insecure-output-handling` | Emitting raw script/SQL payloads verbatim | LLM05 |
+| `unbounded-consumption` | No output cap → denial of wallet | LLM10 |
+
+Every scan also produces a **risk score (0-100) and letter grade (A-F)** for
+quick triage and dashboards.
+
+### Built for live models
+
+- **Multi-turn conversations** — `converse()` drives real chat history (used by
+  the crescendo probe); native for OpenAI-compatible targets.
+- **Resilience** — HTTP targets retry transient errors (429/5xx) with backoff and
+  support client-side rate limiting (`rate_limit_per_min`) so you can safely scan
+  real, rate-limited APIs.
+- **Reusable detectors** — shared refusal detection and PII/secret regexes keep
+  detection consistent and false positives low across probes.
 
 Probes that need privileged **system/user role separation**
 (`system-prompt-leak`, `sensitive-info-disclosure`) are skipped automatically for

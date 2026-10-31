@@ -3,18 +3,28 @@
 from __future__ import annotations
 
 from .base import Finding, Probe, ProbeContext
+from .encoding_injection import EncodingInjectionProbe
+from .excessive_agency import ExcessiveAgencyProbe
+from .indirect_injection import IndirectInjectionProbe
 from .insecure_output import InsecureOutputProbe
 from .jailbreak import JailbreakProbe
+from .multi_turn_escalation import MultiTurnEscalationProbe
 from .prompt_injection import PromptInjectionProbe
 from .sensitive_info import SensitiveInfoProbe
 from .system_prompt_leak import SystemPromptLeakProbe
+from .unbounded_consumption import UnboundedConsumptionProbe
 
 ALL_PROBES: list[Probe] = [
     PromptInjectionProbe(),
+    IndirectInjectionProbe(),
+    EncodingInjectionProbe(),
     JailbreakProbe(),
+    MultiTurnEscalationProbe(),
     SystemPromptLeakProbe(),
     SensitiveInfoProbe(),
+    ExcessiveAgencyProbe(),
     InsecureOutputProbe(),
+    UnboundedConsumptionProbe(),
 ]
 
 
@@ -39,8 +49,13 @@ __all__ = [
     "probes_by_id",
     "select_probes",
     "PromptInjectionProbe",
+    "IndirectInjectionProbe",
+    "EncodingInjectionProbe",
     "JailbreakProbe",
+    "MultiTurnEscalationProbe",
     "SystemPromptLeakProbe",
     "SensitiveInfoProbe",
+    "ExcessiveAgencyProbe",
     "InsecureOutputProbe",
+    "UnboundedConsumptionProbe",
 ]

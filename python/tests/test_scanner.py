@@ -18,11 +18,31 @@ from aegis_ai import (
 def test_scan_vulnerable_finds_all_classes(vulnerable):
     result = Scanner(ScanConfig()).scan(vulnerable)
     found = {f.probe_id for f in result.findings}
-    assert "prompt-injection" in found
-    assert "jailbreak" in found
-    assert "system-prompt-leak" in found
-    assert "sensitive-info-disclosure" in found
-    assert "insecure-output-handling" in found
+    expected = {
+        "prompt-injection",
+        "indirect-injection",
+        "encoding-injection",
+        "jailbreak",
+        "multi-turn-escalation",
+        "system-prompt-leak",
+        "sensitive-info-disclosure",
+        "excessive-agency",
+        "insecure-output-handling",
+        "unbounded-consumption",
+    }
+    assert expected.issubset(found), f"missing: {expected - found}"
+
+
+def test_vulnerable_risk_score_is_high(vulnerable):
+    result = Scanner(ScanConfig()).scan(vulnerable)
+    assert result.risk_score() == 100  # multiple high/critical findings
+    assert result.grade() == "F"
+
+
+def test_secure_risk_score_is_zero(secure):
+    result = Scanner(ScanConfig()).scan(secure)
+    assert result.risk_score() == 0
+    assert result.grade() == "A"
 
 
 def test_scan_secure_is_clean(secure):
