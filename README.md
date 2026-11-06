@@ -1,6 +1,6 @@
 # 🛡️ Aegis-DAST
 
-**An AI-augmented, safe-by-default security scanner — for web apps _and_ AI models.**
+**An AI-augmented, safe-by-default security scanner — for web apps _and_ AI models. 50+ attack techniques.**
 
 [![CI](https://github.com/Upadhyay123a/aegis-dast/actions/workflows/ci.yml/badge.svg)](https://github.com/Upadhyay123a/aegis-dast/actions/workflows/ci.yml)
 [![Python CI](https://github.com/Upadhyay123a/aegis-dast/actions/workflows/python-ci.yml/badge.svg)](https://github.com/Upadhyay123a/aegis-dast/actions/workflows/python-ci.yml)
@@ -87,7 +87,7 @@ attack checks), `-H "Cookie: ..."` (authenticated scans), `--fail-on` (CI gate).
 Full reference: run `aegis scan --help`. Example config:
 [`examples/aegis.config.json`](examples/aegis.config.json).
 
-### Web checks
+### Web checks (28)
 
 | Rule id | Kind | Max severity | Detects |
 |---------|------|--------------|---------|
@@ -95,14 +95,29 @@ Full reference: run `aegis scan --help`. Example config:
 | `cookie-flags` | passive | medium | Cookies missing HttpOnly / Secure / SameSite |
 | `info-leak` | passive | high | Version banners, directory listing, leaked secrets |
 | `csrf` | passive | medium | State-changing forms with no anti-CSRF token |
+| `jwt-analysis` | passive | high | JWTs in responses; `alg:none` signature bypass |
+| `csp-analysis` | passive | medium | Weak CSP (`unsafe-inline`, wildcards, missing directives) |
+| `dom-xss-indicators` | passive | medium | Inline JS routing a URL source into a DOM sink |
+| `mixed-content` | passive | low | HTTPS page loading plaintext HTTP subresources |
 | `xss-reflected` | active | high | Reflected cross-site scripting |
 | `sqli` | active | critical | Error-based & boolean SQL injection |
+| `sqli-time-based` | active | critical | Blind SQLi via confirmed timing delays |
 | `command-injection` | active | critical | OS command injection (quote-split echo marker) |
+| `ssti` | active | critical | Server-side template injection (arithmetic canary) |
+| `ssi-injection` | active | critical | Server-side includes execution |
+| `nosql-injection` | active | high | NoSQL (MongoDB) injection via error signatures |
+| `ldap-injection` | active | high | LDAP injection via error signatures |
+| `xpath-injection` | active | high | XPath injection via error signatures |
 | `path-traversal` | active | critical | Local file inclusion / directory traversal |
 | `ssrf` | active | high | Server-side request forgery (non-routable canary) |
 | `open-redirect` | active | medium | Unvalidated redirects |
 | `crlf-injection` | active | medium | HTTP response splitting / header injection |
 | `cors-misconfig` | active | high | Reflected Origin / credentials misconfig |
+| `host-header-injection` | active | medium | Reflected/overridable Host & X-Forwarded-Host |
+| `web-cache-poisoning` | active | high | Unkeyed header reflected into a cacheable response |
+| `sensitive-files` | active | critical | Exposed `.git` / `.env` / backups / config |
+| `http-methods` | active | medium | TRACE (XST) and risky methods enabled |
+| `graphql-introspection` | active | medium | GraphQL schema exposed via introspection |
 
 ### The AI engine (optional)
 
@@ -187,24 +202,37 @@ result = Scanner().scan(CallableTarget(my_model_fn, name="my-model"))
 print(result.counts())
 ```
 
-### AI probes (OWASP LLM Top 10)
+### AI probes (23, across the OWASP LLM Top 10)
 
 | Probe id | Tests for | OWASP |
 |----------|-----------|-------|
 | `prompt-injection` | Direct instruction override via user input | LLM01 |
 | `indirect-injection` | Instruction smuggled through retrieved/RAG content | LLM01 |
 | `encoding-injection` | Base64/ROT13-obfuscated injection past filters | LLM01 |
+| `special-token-injection` | Fake chat-template role tokens (`<\|im_start\|>`) | LLM01 |
+| `unicode-obfuscation` | Zero-width / unicode-hidden instructions | LLM01 |
+| `payload-splitting` | Trigger split across variables to dodge filters | LLM01 |
 | `jailbreak` | Guardrail bypass via jailbreak wrappers | LLM01 |
+| `many-shot-jailbreak` | Context flooded with fake compliant examples | LLM01 |
+| `refusal-suppression` | Forbidding refusal language to force compliance | LLM01 |
+| `multilingual-bypass` | Attack in a low-resource language | LLM01 |
+| `adversarial-suffix` | GCG-style adversarial suffix | LLM01 |
+| `context-overflow` | Instruction buried after a wall of filler | LLM01 |
+| `virtualization-jailbreak` | Request nested in a fictional simulation | LLM01 |
+| `goal-hijacking` | Pivot from a benign task mid-prompt | LLM01 |
 | `multi-turn-escalation` | "Crescendo" attacks across a conversation | LLM01 |
 | `system-prompt-leak` | Disclosure of hidden system instructions | LLM07 |
+| `prefill-extraction` | Extraction via completion-prefill priming | LLM07 |
+| `translation-leak` | System prompt leaked via translation laundering | LLM07 |
 | `sensitive-info-disclosure` | Extraction of secrets planted in context | LLM02 |
+| `markdown-data-exfil` | Secret exfiltrated via a markdown image/link URL | LLM02 |
 | `excessive-agency` | Taking/confirming destructive actions | LLM06 |
 | `insecure-output-handling` | Emitting raw script/SQL payloads verbatim | LLM05 |
 | `unbounded-consumption` | No output cap → denial of wallet | LLM10 |
 
 Every AI scan also returns a **risk score (0-100) and grade (A-F)**. Targets
 support multi-turn conversations, retries, and rate limiting for scanning real
-live models.
+live models. **Over 50 attack techniques across web + AI.**
 
 ---
 

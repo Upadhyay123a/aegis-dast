@@ -68,18 +68,31 @@ print(result.counts())
 open("report.html", "w").write(render_html(result))
 ```
 
-## Probes (OWASP LLM Top 10)
+## Probes (23, across the OWASP LLM Top 10)
 
 | Probe id | Tests for | OWASP |
 |----------|-----------|-------|
 | `prompt-injection` | Direct instruction override via user input | LLM01 |
 | `indirect-injection` | Instruction smuggled through retrieved/RAG content | LLM01 |
 | `encoding-injection` | Base64/ROT13-obfuscated injection past plaintext filters | LLM01 |
+| `special-token-injection` | Fake chat-template role tokens | LLM01 |
+| `unicode-obfuscation` | Zero-width / unicode-hidden instructions | LLM01 |
+| `payload-splitting` | Trigger split across variables | LLM01 |
 | `jailbreak` | Guardrail bypass via jailbreak wrappers | LLM01 |
-| `multi-turn-escalation` | "Crescendo" attacks that build up over a conversation | LLM01 |
+| `many-shot-jailbreak` | Context flooded with fake compliant examples | LLM01 |
+| `refusal-suppression` | Forbidding refusal language | LLM01 |
+| `multilingual-bypass` | Attack in a low-resource language | LLM01 |
+| `adversarial-suffix` | GCG-style adversarial suffix | LLM01 |
+| `context-overflow` | Instruction buried after filler | LLM01 |
+| `virtualization-jailbreak` | Request nested in a fictional simulation | LLM01 |
+| `goal-hijacking` | Pivot from a benign task mid-prompt | LLM01 |
+| `multi-turn-escalation` | "Crescendo" attacks over a conversation | LLM01 |
 | `system-prompt-leak` | Disclosure of hidden system instructions | LLM07 |
+| `prefill-extraction` | Extraction via completion-prefill priming | LLM07 |
+| `translation-leak` | System prompt leaked via translation | LLM07 |
 | `sensitive-info-disclosure` | Extraction of secrets planted in context | LLM02 |
-| `excessive-agency` | Taking/confirming destructive actions instead of refusing | LLM06 |
+| `markdown-data-exfil` | Secret exfiltrated via markdown image/link URL | LLM02 |
+| `excessive-agency` | Taking/confirming destructive actions | LLM06 |
 | `insecure-output-handling` | Emitting raw script/SQL payloads verbatim | LLM05 |
 | `unbounded-consumption` | No output cap → denial of wallet | LLM10 |
 
