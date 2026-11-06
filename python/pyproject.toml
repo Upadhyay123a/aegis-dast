@@ -7,7 +7,7 @@ name = "aegis-ai"
 version = "0.1.0"
 description = "Aegis-AI — DAST-style security scanner for AI/LLM models and endpoints (prompt injection, jailbreaks, system-prompt & data leakage, insecure output)."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Upadhyay123a" }]
 keywords = ["llm", "ai-security", "prompt-injection", "jailbreak", "dast", "red-team", "owasp-llm"]
@@ -37,7 +37,7 @@ packages = ["aegis_ai"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

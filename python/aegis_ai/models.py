@@ -21,7 +21,8 @@ import json
 import time
 import urllib.error
 import urllib.request
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 # HTTP status codes worth retrying (transient).
 _RETRYABLE = {408, 409, 425, 429, 500, 502, 503, 504}

@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 ![Node](https://img.shields.io/badge/node-%E2%89%A520-339933?logo=node.js&logoColor=white)
-![Python](https://img.shields.io/badge/python-%E2%89%A53.9-3776AB?logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/python-%E2%89%A53.10-3776AB?logo=python&logoColor=white)
 
 Aegis-DAST is a two-part toolkit:
 
@@ -172,7 +172,7 @@ Security-tests **any AI model or endpoint**. Full docs: [`python/README.md`](pyt
 
 ### Install & quick start
 
-Requires **Python ≥ 3.9**. No third-party dependencies.
+Requires **Python ≥ 3.10**. No third-party dependencies.
 
 ```bash
 cd python
