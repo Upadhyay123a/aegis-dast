@@ -38,6 +38,21 @@ function handle(req: import('node:http').IncomingMessage, res: import('node:http
     const url = new URL(req.url ?? '/', 'http://127.0.0.1');
     const path = url.pathname;
 
+    // VULN: TRACE echoes the request (Cross-Site Tracing).
+    if (req.method === 'TRACE') {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'message/http');
+      res.end(`TRACE ${req.url} HTTP/1.1\r\nhost: ${req.headers.host}\r\n`);
+      return;
+    }
+    // VULN: advertises risky methods.
+    if (req.method === 'OPTIONS') {
+      res.statusCode = 200;
+      res.setHeader('Allow', 'GET, POST, PUT, DELETE, TRACE, OPTIONS');
+      res.end('');
+      return;
+    }
+
     // --- Routes needing raw control must run BEFORE we set common headers. ---
 
     // VULN: CRLF injection — reflects `lang` into a header with no sanitization.
@@ -63,8 +78,12 @@ function handle(req: import('node:http').IncomingMessage, res: import('node:http
     res.setHeader('Server', 'VulnServer/1.0');
 
     if (path === '/') {
+      // VULN: reflects the X-Forwarded-Host header into an absolute link.
+      const xfh = req.headers['x-forwarded-host'];
+      const canonical = typeof xfh === 'string' ? `https://${xfh}/` : 'https://127.0.0.1/';
       res.statusCode = 200;
-      res.end(`<!doctype html><html><head><title>Vuln App</title></head><body>
+      res.end(`<!doctype html><html><head><title>Vuln App</title>
+        <link rel="canonical" href="${canonical}"></head><body>
         <h1>Welcome</h1>
         <nav>
           <a href="/search?q=hello">Search</a>
@@ -76,9 +95,40 @@ function handle(req: import('node:http').IncomingMessage, res: import('node:http
           <a href="/setlang?lang=en">Language</a>
           <a href="/api?x=1">API</a>
           <a href="/chat?msg=hello">Chat</a>
+          <a href="/render?name=guest">Render</a>
         </nav>
         <form action="/search" method="get"><input name="q" value="test"><button>Go</button></form>
       </body></html>`);
+      return;
+    }
+
+    // VULN: server-side template injection — evaluates {{a*b}} style expressions.
+    if (path === '/render') {
+      const name = url.searchParams.get('name') ?? 'guest';
+      const m = name.match(/(\d{3,})\s*\*\s*(\d+)/);
+      const out = m ? String(Number(m[1]) * Number(m[2])) : name;
+      res.statusCode = 200;
+      res.end(`<!doctype html><html><body><h1>Hello ${out}</h1></body></html>`);
+      return;
+    }
+
+    // VULN: exposed sensitive files.
+    if (path === '/.git/config') {
+      res.statusCode = 200;
+      res.end('[core]\n\trepositoryformatversion = 0\n[remote "origin"]\n\turl = git@github.com:acme/secret.git\n');
+      return;
+    }
+    if (path === '/.env') {
+      res.statusCode = 200;
+      res.end('DB_PASSWORD=sup3rs3cret\nAPI_KEY=AKIAIOSFODNN7EXAMPLE\nDEBUG=true\n');
+      return;
+    }
+
+    // VULN: GraphQL introspection enabled.
+    if (path === '/graphql') {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ data: { __schema: { queryType: { name: 'Query' }, types: [{ name: 'User' }] } } }));
       return;
     }
 

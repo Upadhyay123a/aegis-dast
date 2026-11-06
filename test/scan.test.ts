@@ -52,6 +52,12 @@ describe('end-to-end scan against the vulnerable test server', () => {
     expect(rules.has('ssrf')).toBe(true);
     expect(rules.has('prompt-injection')).toBe(true);
     expect(rules.has('csrf')).toBe(true);
+    // advanced techniques
+    expect(rules.has('ssti')).toBe(true);
+    expect(rules.has('sensitive-files')).toBe(true);
+    expect(rules.has('http-methods')).toBe(true);
+    expect(rules.has('graphql-introspection')).toBe(true);
+    expect(rules.has('host-header-injection')).toBe(true);
 
     const sqli = result.findings.find((f) => f.ruleId === 'sqli');
     expect(sqli?.severity).toBe('critical');
