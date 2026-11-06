@@ -9,9 +9,16 @@ import { securityHeadersCheck } from './passive/security-headers.js';
 import { cookieFlagsCheck } from './passive/cookie-flags.js';
 import { infoLeakCheck } from './passive/info-leak.js';
 import { csrfCheck } from './passive/csrf.js';
+import {
+  jwtAnalysisCheck,
+  cspAnalysisCheck,
+  domXssCheck,
+  mixedContentCheck,
+} from './passive/analysis.js';
 
 import { xssReflectedCheck } from './active/xss-reflected.js';
 import { sqliCheck } from './active/sqli.js';
+import { blindSqliCheck } from './active/blind-sqli.js';
 import { openRedirectCheck } from './active/open-redirect.js';
 import { pathTraversalCheck } from './active/path-traversal.js';
 import { corsCheck } from './active/cors.js';
@@ -19,6 +26,19 @@ import { crlfInjectionCheck } from './active/crlf-injection.js';
 import { commandInjectionCheck } from './active/command-injection.js';
 import { ssrfCheck } from './active/ssrf.js';
 import { promptInjectionCheck } from './active/prompt-injection.js';
+import {
+  sstiCheck,
+  ssiCheck,
+  nosqlCheck,
+  ldapCheck,
+  xpathCheck,
+} from './active/injection-advanced.js';
+import { hostHeaderCheck, cachePoisoningCheck } from './active/header-attacks.js';
+import {
+  sensitiveFilesCheck,
+  httpMethodsCheck,
+  graphqlCheck,
+} from './active/discovery.js';
 
 export const ALL_CHECKS: Check[] = [
   // passive
@@ -26,9 +46,14 @@ export const ALL_CHECKS: Check[] = [
   cookieFlagsCheck,
   infoLeakCheck,
   csrfCheck,
+  jwtAnalysisCheck,
+  cspAnalysisCheck,
+  domXssCheck,
+  mixedContentCheck,
   // active
   xssReflectedCheck,
   sqliCheck,
+  blindSqliCheck,
   openRedirectCheck,
   pathTraversalCheck,
   corsCheck,
@@ -36,6 +61,16 @@ export const ALL_CHECKS: Check[] = [
   commandInjectionCheck,
   ssrfCheck,
   promptInjectionCheck,
+  sstiCheck,
+  ssiCheck,
+  nosqlCheck,
+  ldapCheck,
+  xpathCheck,
+  hostHeaderCheck,
+  cachePoisoningCheck,
+  sensitiveFilesCheck,
+  httpMethodsCheck,
+  graphqlCheck,
 ];
 
 /**
