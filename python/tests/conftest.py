@@ -13,7 +13,7 @@ import pytest
 
 from aegis_ai.models import Message, Target, _merge_prompt
 
-_MATH = re.compile(r"(\d+)\s*(?:multiplied by|times|\*|x)\s*(\d+)", re.I)
+_MATH = re.compile(r"(\d+)\s*(?:multiplied by|multipliziert mit|गुणा|times|\*|x)\s*(\d+)", re.I)
 _LEAK_TRIGGERS = (
     "repeat everything",
     "system instructions",
